@@ -22,11 +22,9 @@ import java.util.Set;
 
 import com.signalcollect.ExecutionInformation;
 import com.signalcollect.interfaces.AggregationOperation;
-import com.signalcollect.Graph;
 import com.signalcollect.StateForwarderEdge;
 import com.signalcollect.Vertex;
-import com.signalcollect.javaapi.GraphBuilder;
-import com.signalcollect.javaapi.VertexCommand;
+import com.signalcollect.javaapi.*;
 
 /**
  * @author: Stephane Rufer The University of Z&uuml;rich<br>

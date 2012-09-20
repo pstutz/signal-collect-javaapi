@@ -1,7 +1,6 @@
 package com.signalcollect.javaapi.examples.sssp;
 
 import com.signalcollect.ExecutionInformation;
-import com.signalcollect.Graph;
 import com.signalcollect.Vertex;
 import com.signalcollect.javaapi.*;
 

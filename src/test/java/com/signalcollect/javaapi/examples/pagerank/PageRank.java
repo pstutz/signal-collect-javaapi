@@ -1,10 +1,8 @@
 package com.signalcollect.javaapi.examples.pagerank;
 
 import com.signalcollect.ExecutionInformation;
-import com.signalcollect.Graph;
 import com.signalcollect.Vertex;
-import com.signalcollect.javaapi.GraphBuilder;
-import com.signalcollect.javaapi.VertexCommand;
+import com.signalcollect.javaapi.*;
 
 /**
  * Test driver for a PageRank computation

@@ -16,7 +16,6 @@
  */
 package com.signalcollect.javaapi.examples.kcore;
 
-import com.signalcollect.Graph;
 import com.signalcollect.Vertex;
 import com.signalcollect.ExecutionInformation;
 import com.signalcollect.StateForwarderEdge;
