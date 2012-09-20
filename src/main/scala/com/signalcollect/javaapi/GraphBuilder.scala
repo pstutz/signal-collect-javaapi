@@ -21,7 +21,6 @@ package com.signalcollect.javaapi
 
 import com.signalcollect.{ GraphBuilder => ScalaGraphBuilder }
 import com.signalcollect.configuration._
-import com.signalcollect.Graph
 import com.signalcollect.interfaces.LogMessage
 import com.signalcollect.interfaces.MessageBusFactory
 import com.signalcollect.interfaces.WorkerFactory
@@ -32,7 +31,7 @@ class GraphBuilder(config: GraphConfiguration) extends ScalaGraphBuilder(config)
 
   def this() = this(GraphConfiguration())
 
-  override def build: DefaultGraph = new DefaultGraph(config)
+  override def build: Graph = new DefaultGraph(config)
 
   /**
    *  Internal function to create a new builder instance that has a configuration which defaults

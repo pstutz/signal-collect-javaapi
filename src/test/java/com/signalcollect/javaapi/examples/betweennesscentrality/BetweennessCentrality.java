@@ -25,7 +25,6 @@ import com.signalcollect.interfaces.AggregationOperation;
 import com.signalcollect.Graph;
 import com.signalcollect.StateForwarderEdge;
 import com.signalcollect.Vertex;
-import com.signalcollect.javaapi.FunUtil;
 import com.signalcollect.javaapi.GraphBuilder;
 import com.signalcollect.javaapi.VertexCommand;
 
@@ -106,14 +105,14 @@ public class BetweennessCentrality {
 
 		// print the state of every vertex in the graph. This is for debug
 		// purposes
-		graph.foreachVertex(FunUtil.convert(new VertexCommand() {
+		graph.foreachVertex(new VertexCommand() {
 			public void f(Vertex v) {
 				System.out.println(v);
 			}
-		}));
+		});
 
 		// print the state of every vertex in the graph (The betweenness centrality).
-		graph.foreachVertex(FunUtil.convert(new VertexCommand() {
+		graph.foreachVertex(new VertexCommand() {
 			public void f(Vertex v) {
 				HashMap<Set<Integer>, Set<Integer>> v_state = (HashMap<Set<Integer>, Set<Integer>>) v
 						.state();
@@ -142,7 +141,7 @@ public class BetweennessCentrality {
 						+ " GL: " + (globalShortestPaths.size() - v_global_minus)
 						+ " BC: " + bc);
 			}
-		}));
+		});
 		graph.shutdown();
 	}
 

@@ -2,7 +2,9 @@ package com.signalcollect.javaapi.examples.pagerank;
 
 import com.signalcollect.ExecutionInformation;
 import com.signalcollect.Graph;
+import com.signalcollect.Vertex;
 import com.signalcollect.javaapi.GraphBuilder;
+import com.signalcollect.javaapi.VertexCommand;
 
 /**
  * Test driver for a PageRank computation
@@ -26,16 +28,22 @@ public class PageRank {
 	 * (1) <=> (2) <=> (3)
 	 */
 	public void executePageRank() {
-		Graph cg = new GraphBuilder().build();
-		cg.addVertex(new PageRankVertex(1, 0.15));
-		cg.addVertex(new PageRankVertex(2, 0.15));
-		cg.addVertex(new PageRankVertex(3, 0.15));
-		cg.addEdge(new PageRankEdge(1, 2));
-		cg.addEdge(new PageRankEdge(2, 1));
-		cg.addEdge(new PageRankEdge(2, 3));
-		cg.addEdge(new PageRankEdge(3, 2));
-		ExecutionInformation stats = cg.execute();
+		Graph graph = new GraphBuilder().build();
+		graph.addVertex(new PageRankVertex(1, 0.15));
+		graph.addVertex(new PageRankVertex(2, 0.15));
+		graph.addVertex(new PageRankVertex(3, 0.15));
+		graph.addEdge(new PageRankEdge(1, 2));
+		graph.addEdge(new PageRankEdge(2, 1));
+		graph.addEdge(new PageRankEdge(2, 3));
+		graph.addEdge(new PageRankEdge(3, 2));
+		ExecutionInformation stats = graph.execute();
 		System.out.println(stats);
-		cg.shutdown();
+		// Print the state of every vertex in the graph.
+		graph.foreachVertex(new VertexCommand(){
+			public void f(Vertex v) {
+				System.out.println(v);
+			}
+		});
+		graph.shutdown();
 	}
 }

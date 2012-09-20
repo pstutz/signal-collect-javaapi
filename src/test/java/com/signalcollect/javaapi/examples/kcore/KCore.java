@@ -141,11 +141,11 @@ public class KCore {
 
 		// print the state of every vertex in the graph. The state is the k core
 		// the vertex belongs to
-		graph.foreachVertex(FunUtil.convert(new VertexCommand() {
+		graph.foreachVertex(new VertexCommand() {
 			public void f(Vertex v) {
 				System.out.println(v);
 			}
-		}));
+		});
 
 		graph.shutdown();
 	}

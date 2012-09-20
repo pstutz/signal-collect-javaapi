@@ -19,7 +19,6 @@ package com.signalcollect.javaapi.examples.clusteringcoefficient;
 import java.util.ArrayList;
 import com.signalcollect.Edge;
 import com.signalcollect.ExecutionInformation;
-import com.signalcollect.Graph;
 import com.signalcollect.StateForwarderEdge;
 import com.signalcollect.Vertex;
 import com.signalcollect.configuration.ExecutionMode;
@@ -111,17 +110,17 @@ public class ClusteringCoefficient {
 		System.out.println(stats);
 
 		// print the state of every vertex in the graph.
-		graph.foreachVertex(FunUtil.convert(new VertexCommand() {
+		graph.foreachVertex(new VertexCommand() {
 			public void f(Vertex v) {
 				System.out.println(v);
 			}
-		}));
+		});
 
 		// calculate the clustering coefficient by going through the whole graph
 		// This is done after the neighborhood and the connection between
 		// vertices in the neighborhood are established by signaling through
 		// the graph.
-		graph.foreachVertex(FunUtil.convert(new VertexCommand() {
+		graph.foreachVertex(new VertexCommand() {
 			public void f(Vertex v) {
 				ArrayList<Integer> v_state = (ArrayList<Integer>) v.state();
 				ArrayList<Integer> neighbors = new ArrayList<Integer>();
@@ -156,7 +155,7 @@ public class ClusteringCoefficient {
 						+ possible_edges + ",\tClustering Coefficient: "
 						+ clustering_coefficient);
 			}
-		}));
+		});
 		graph.shutdown();
 	}
 }

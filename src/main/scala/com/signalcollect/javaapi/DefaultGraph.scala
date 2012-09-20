@@ -19,13 +19,14 @@
 
 package com.signalcollect.javaapi
 
-import com.signalcollect.{ Vertex, DefaultGraph => ScalaDefaultGraph }
+import com.signalcollect.{ Vertex, DefaultGraph => ScalaDefaultGraph, Graph => ScalaGraph }
 import com.signalcollect.configuration.GraphConfiguration
-import com.signalcollect.Graph
 
-class DefaultGraph(config: GraphConfiguration = GraphConfiguration()) extends ScalaDefaultGraph(config) with JavaGraphFunctions
+trait Graph extends ScalaGraph with JavaGraphFunctions
 
-trait JavaGraphFunctions extends Graph {
+class DefaultGraph(config: GraphConfiguration = GraphConfiguration()) extends ScalaDefaultGraph(config) with Graph
+
+trait JavaGraphFunctions extends ScalaGraph {
 
   /**
    *  Executes the function `f` on the vertex with id `vertexId` and returns the result.

@@ -34,12 +34,12 @@ public class SSSP {
 		ExecutionInformation stats = graph.execute();
 		System.out.println(stats);
 		
-		//print the state of every vertex in the graph.
-		graph.foreachVertex(FunUtil.convert(new VertexCommand(){
+		// Print the state of every vertex in the graph.
+		graph.foreachVertex(new VertexCommand(){
 			public void f(Vertex v) {
 				System.out.println(v);
 			}
-		}));
+		});
 		graph.shutdown();
 		
 	}
