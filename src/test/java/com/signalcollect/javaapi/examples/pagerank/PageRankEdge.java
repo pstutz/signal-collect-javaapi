@@ -1,6 +1,8 @@
 package com.signalcollect.javaapi.examples.pagerank;
 
-import com.signalcollect.javaapi.*;
+import com.signalcollect.Vertex;
+
+import com.signalcollect.DefaultEdge;
 
 /**
  * Represents an edge in a PageRank compute graph
@@ -9,17 +11,17 @@ import com.signalcollect.javaapi.*;
  *
  */
 @SuppressWarnings("serial")
-public class PageRankEdge extends DefaultEdge<PageRankVertex> {
+public class PageRankEdge extends DefaultEdge<Integer> {
 
-	public PageRankEdge(Integer sourceId, Integer targetId) {
-		super(sourceId, targetId);
+	public PageRankEdge(Integer targetId) {
+		super(targetId);
 	}
 	
 	/**
 	 * Constructs the signal as the weighted vertex's state divided by the total weight of outgoing edges.
 	 * When no weight is specified the signal is simply the vertex's state divided by the number of outgoing edges.
 	 */
-	public Object signal(PageRankVertex sourceVertex) {
-		return sourceVertex.getState() * getWeight() / sourceVertex.getSumOfOutWeights();
+	public Object signal(Vertex<?, ?> sourceVertex) {
+		return ((Double) sourceVertex.state()) * weight() / ((PageRankVertex) sourceVertex).sumOfOutWeights;
 	}
 }

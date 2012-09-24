@@ -2,6 +2,7 @@ package com.signalcollect.javaapi.examples.gameoflife;
 
 import java.lang.Iterable;
 
+import com.signalcollect.GraphEditor;
 import com.signalcollect.javaapi.*;
 
 /**
@@ -45,7 +46,7 @@ public class GameOfLifeCell extends DataGraphVertex<Integer, Boolean, Boolean> {
 	 *  @param signals the newest signals that were sent to the cell
 	 *  @param messageBus
 	 */
-	public Boolean collect(Boolean oldState, Iterable<Boolean> signals) {		
+	public Boolean collect(Boolean oldState, Iterable<Boolean> signals, GraphEditor graphEditor) {		
 		//counts all alive neighbors of a cell.
 		int sumOfAliveNeighbors = 0;
 		for (Boolean isAlive : signals) {

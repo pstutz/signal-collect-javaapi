@@ -16,6 +16,8 @@
  */
 package com.signalcollect.javaapi.examples.kcore;
 
+import com.signalcollect.GraphEditor;
+
 import com.signalcollect.javaapi.DataGraphVertex;
 
 /**
@@ -23,6 +25,7 @@ import com.signalcollect.javaapi.DataGraphVertex;
  * 
  *          Date: Mar 18, 2012 Package: ch.uzh.ifi.ddis.k_core
  */
+@SuppressWarnings("serial")
 public class KCoreVertex extends DataGraphVertex<Integer, Integer, Integer> {
 
 	private int threshold; // indication of the stage of the computation
@@ -49,7 +52,7 @@ public class KCoreVertex extends DataGraphVertex<Integer, Integer, Integer> {
 	 * The collect method that calculates the kcore of the vertex. The kcore is
 	 * represented by the vertex state.
 	 */
-	public Integer collect(Integer oldState, Iterable<Integer> mostRecentSignals) {
+	public Integer collect(Integer oldState, Iterable<Integer> mostRecentSignals, GraphEditor graphEditor) {
 		int count = 0;
 		// count the number of neighbors above the threshold. These are the
 		// neighbors relevant to the computation at this step.

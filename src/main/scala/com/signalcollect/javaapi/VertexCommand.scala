@@ -22,5 +22,5 @@ package com.signalcollect.javaapi
 import com.signalcollect._
 
 abstract class VertexCommand {  
-  def f(v: Vertex)
+  def f(v: Vertex[_, _])
 }

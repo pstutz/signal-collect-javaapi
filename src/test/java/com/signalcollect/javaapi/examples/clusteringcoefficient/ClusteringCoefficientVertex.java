@@ -17,6 +17,9 @@
 package com.signalcollect.javaapi.examples.clusteringcoefficient;
 
 import java.util.ArrayList;
+
+import com.signalcollect.GraphEditor;
+
 import com.signalcollect.javaapi.DataGraphVertex;
 
 /**
@@ -24,6 +27,7 @@ import com.signalcollect.javaapi.DataGraphVertex;
  * 
  *          Date: Mar 11, 2012 Package: ch.uzh.ifi.ddis.clustering_coefficient
  */
+@SuppressWarnings("serial")
 public class ClusteringCoefficientVertex extends
 		DataGraphVertex<Integer, ArrayList<Integer>, ArrayList<Integer>> {
 
@@ -48,10 +52,11 @@ public class ClusteringCoefficientVertex extends
 	 * This is then used to calculate the clustering coefficient. The clustering
 	 * coefficient is calculated globally by going through the whole graph.
 	 */
+	@SuppressWarnings("unchecked")
 	public ArrayList<Integer> collect(ArrayList<Integer> oldState,
-			Iterable<ArrayList<Integer>> mostRecentSignals) {
-		ArrayList<Integer> newState = (ArrayList<Integer>) (((ArrayList<Integer>) oldState)
-				.clone());
+			Iterable<ArrayList<Integer>> mostRecentSignals,
+			GraphEditor graphEditor) {
+		ArrayList<Integer> newState = (ArrayList<Integer>) oldState.clone();
 
 		// Get all the neighbors of the vertex and add their neighbors to the
 		// vertex state.
@@ -64,4 +69,5 @@ public class ClusteringCoefficientVertex extends
 		return newState;
 
 	}
+
 }

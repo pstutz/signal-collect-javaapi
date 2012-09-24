@@ -28,6 +28,7 @@ import java.util.Set;
  *          This class is an abstraction that represents the full path between
  *          two vertisies in addition the distance.
  */
+@SuppressWarnings("serial")
 public class PathValue implements Serializable {
 	private Set<Integer> key; // the key associated with the path (source and target vertex id)
 	private Set<Integer> path; // the path between the two vertisies

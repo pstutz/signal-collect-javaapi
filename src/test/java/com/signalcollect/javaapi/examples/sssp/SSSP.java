@@ -23,19 +23,19 @@ public class SSSP {
 		graph.addVertex(new SSSPNode(5));
 		graph.addVertex(new SSSPNode(6));
 		
-		graph.addEdge(new SSSPEdge(1, 2));
-		graph.addEdge(new SSSPEdge(2, 3));
-		graph.addEdge(new SSSPEdge(3, 4));
-		graph.addEdge(new SSSPEdge(1, 5));
-		graph.addEdge(new SSSPEdge(4, 6));
-		graph.addEdge(new SSSPEdge(5, 6));
+		graph.addEdge(1, new SSSPEdge(2));
+		graph.addEdge(2, new SSSPEdge(3));
+		graph.addEdge(3, new SSSPEdge(4));
+		graph.addEdge(1, new SSSPEdge(5));
+		graph.addEdge(4, new SSSPEdge(6));
+		graph.addEdge(5, new SSSPEdge(6));
 		
 		ExecutionInformation stats = graph.execute();
 		System.out.println(stats);
 		
 		// Print the state of every vertex in the graph.
 		graph.foreachVertex(new VertexCommand(){
-			public void f(Vertex v) {
+			public void f(Vertex<?, ?> v) {
 				System.out.println(v);
 			}
 		});

@@ -19,11 +19,13 @@
 
 package com.signalcollect.javaapi;
 
-import scala.Some;
 import scala.collection.JavaConversions;
-import com.signalcollect.EdgeId;
+import com.signalcollect.Edge;
 
-import com.signalcollect.interfaces.MessageBus;
+import com.signalcollect.AbstractVertex;
+
+import com.signalcollect.GraphEditor;
+
 import com.signalcollect.interfaces.SignalMessage;
 
 import java.util.HashMap;
@@ -34,9 +36,11 @@ import java.util.HashMap;
  * specific algorithm by defining a `collect` function.
  */
 @SuppressWarnings("serial")
-public abstract class DataGraphVertex<IdTypeParameter, StateTypeParameter, SignalTypeParameter>
-		extends
-		JavaVertex<IdTypeParameter, StateTypeParameter, SignalTypeParameter> {
+public abstract class DataGraphVertex<Id, State, Signal> extends
+		AbstractVertex<Id, State> {
+
+	Id id;
+	State state;
 
 	/**
 	 * @param vertexId
@@ -44,16 +48,17 @@ public abstract class DataGraphVertex<IdTypeParameter, StateTypeParameter, Signa
 	 * @param initialState
 	 *            the initial state of the vertex.
 	 */
-	public DataGraphVertex(IdTypeParameter vertexId,
-			StateTypeParameter initialState) {
-		super(vertexId, initialState);
+	public DataGraphVertex(Id vertexId, State initialState) {
+		super();
+		this.id = vertexId;
+		this.state = initialState;
 	}
 
 	/**
-	 * A map that has edge ids as keys and stores the most recent signal
-	 * received along the edge with that id as the value for that key.
+	 * A map that has vertex ids as keys and stores the most recent signal
+	 * received from the vertex with the given id as the value for that key.
 	 */
-	protected HashMap<EdgeId<?, IdTypeParameter>, SignalTypeParameter> mostRecentSignalMap = new HashMap<EdgeId<?, IdTypeParameter>, SignalTypeParameter>();
+	protected HashMap<Object, Signal> mostRecentSignalMap = new HashMap<Object, Signal>();
 
 	/**
 	 * Function that gets called by the framework whenever this vertex is
@@ -67,17 +72,29 @@ public abstract class DataGraphVertex<IdTypeParameter, StateTypeParameter, Signa
 	 *            an instance of MessageBus which can be used by this vertex to
 	 *            interact with the graph.
 	 */
+	@SuppressWarnings("unchecked")
+	@Override
 	public void executeCollectOperation(
-			scala.collection.Iterable<SignalMessage<?, ?, ?>> signalMessages,
-			MessageBus messageBus) {
-		Iterable<SignalMessage<?, ?, ?>> javaMessages = JavaConversions
+			scala.collection.Iterable<SignalMessage<?>> signalMessages,
+			GraphEditor graphEditor) {
+		Iterable<SignalMessage<?>> javaMessages = JavaConversions
 				.asJavaIterable(signalMessages);
-		for (SignalMessage<?, ?, ?> message : javaMessages) {
-			@SuppressWarnings("unchecked")
-			SignalMessage<?, IdTypeParameter, SignalTypeParameter> castMessage = (SignalMessage<?, IdTypeParameter, SignalTypeParameter>) message;
-			mostRecentSignalMap.put(castMessage.edgeId(), castMessage.signal());
+		for (SignalMessage<?> message : javaMessages) {
+			mostRecentSignalMap.put(message.edgeId(), (Signal) message.signal());
 		}
-		setState(collect(getState(), mostRecentSignalMap.values()));
+		setState(collect(state(), mostRecentSignalMap.values(), graphEditor));
+	}
+
+	public Id id() {
+		return id;
+	}
+
+	public State state() {
+		return state;
+	}
+
+	public void setState(State s) {
+		state = s;
 	}
 
 	/**
@@ -97,17 +114,30 @@ public abstract class DataGraphVertex<IdTypeParameter, StateTypeParameter, Signa
 	 * 
 	 * @return The new vertex state.
 	 */
-	public abstract StateTypeParameter collect(StateTypeParameter oldState,
-			Iterable<SignalTypeParameter> mostRecentSignals);
+	public abstract State collect(State oldState,
+			Iterable<Signal> mostRecentSignals, GraphEditor graphEditor);
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Double sumOfOutWeights = 0.0;
+
 	@Override
-	public scala.Option<scala.collection.Iterable<Object>> getVertexIdsOfPredecessors() {
-		scala.collection.mutable.ListBuffer<Object> result = new scala.collection.mutable.ListBuffer<Object>();
-		for (EdgeId id : mostRecentSignalMap.keySet()) {
-			result.$plus$eq(id.sourceId());
+	public boolean addEdge(Edge<?> e, GraphEditor graphEditor) {
+		Boolean added = super.addEdge(e, graphEditor);
+		if (added) {
+			sumOfOutWeights += e.weight();
 		}
-		return new Some(result);
+		return added;
 	}
 
+	public boolean removeEdge(Object targetId, GraphEditor graphEditor) {
+		Double weightToSubtract = 0.0;
+		Edge<?> outgoingEdge = outgoingEdges().get(targetId);
+		if (outgoingEdge != null) {
+			weightToSubtract = outgoingEdge.weight();
+		}
+		Boolean removed = super.removeEdge(targetId, graphEditor);
+		if (removed) {
+			sumOfOutWeights -= weightToSubtract;
+		}
+		return removed;
+	}
 }

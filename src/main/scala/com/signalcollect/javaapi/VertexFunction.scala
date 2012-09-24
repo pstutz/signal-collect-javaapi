@@ -22,5 +22,5 @@ package com.signalcollect.javaapi
 import com.signalcollect._
 
 abstract class VertexFunction[ReturnValueType] {
-  def f(v: Vertex): ReturnValueType
+  def f(v: Vertex[_, _]): ReturnValueType
 }

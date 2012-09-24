@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.signalcollect.Edge;
+import com.signalcollect.GraphEditor;
 import com.signalcollect.javaapi.DataGraphVertex;
 
 /**
@@ -29,6 +29,7 @@ import com.signalcollect.javaapi.DataGraphVertex;
  * 
  *          Date: Mar 11, 2012 Package: ch.uzh.ifi.ddis.betweenness_centrality
  */
+@SuppressWarnings("serial")
 public class BetweennessCentralityVertex
 		extends
 		DataGraphVertex<Integer, HashMap<Set<Integer>, PathValue>, HashMap<Set<Integer>, PathValue>> {
@@ -55,22 +56,19 @@ public class BetweennessCentralityVertex
 	 * The vertex passes on changes to paths to its neighbors, who then
 	 * determine if this information is relevant to their context.
 	 */
+	@SuppressWarnings("unchecked")
 	public HashMap<Set<Integer>, PathValue> collect(
 			HashMap<Set<Integer>, PathValue> oldState,
-			Iterable<HashMap<Set<Integer>, PathValue>> mostRecentSignals) {
-		HashMap<Set<Integer>, PathValue> newState = (HashMap<Set<Integer>, PathValue>) ((HashMap) oldState)
+			Iterable<HashMap<Set<Integer>, PathValue>> mostRecentSignals,
+			GraphEditor graphEditor) {
+		HashMap<Set<Integer>, PathValue> newState = (HashMap<Set<Integer>, PathValue>) ((HashMap<?, ?>) oldState)
 				.clone();
 
 		// Find neighbors
 		Set<Integer> neighbors = new HashSet<Integer>();
-		scala.collection.Iterator<scala.collection.Iterable<Edge>> it = this
-				.getOutgoingEdges().iterator();
-		while (it.hasNext()) {
-			scala.collection.Iterator<Edge> eit = it.next().iterator();
-			while (eit.hasNext()) {
-				Edge e = eit.next();
-				neighbors.add((Integer) e.id().targetId());
-			}
+		java.util.Set<Object> targetIds = outgoingEdges().keySet();
+		for (Object targetId : targetIds) {
+			neighbors.add((Integer) targetId);
 		}
 
 		for (HashMap<Set<Integer>, PathValue> signal : mostRecentSignals) {
@@ -81,7 +79,7 @@ public class BetweennessCentralityVertex
 					// The value associated with the key (path plus distance)
 					PathValue value = signal.get(key);
 					// Add the key, value pair if the vertex is on the path
-					if (value.getPath().contains(this.id())) { 
+					if (value.getPath().contains(this.id())) {
 						newState.put(key, signal.get(key));
 					}
 					for (Integer n : neighbors) {

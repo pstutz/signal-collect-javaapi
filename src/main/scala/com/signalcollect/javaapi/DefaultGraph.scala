@@ -47,7 +47,7 @@ trait JavaGraphFunctions extends ScalaGraph {
    *
    *  @usecase def forVertexWithId(vertexId: Any, f: VertexFunction[String]): String
    */
-  def forVertexWithId[VertexType <: Vertex, ResultType](vertexId: Any, f: VertexFunction[ResultType]): ResultType = {
+  def forVertexWithId[VertexType <: Vertex[_, _], ResultType](vertexId: Any, f: VertexFunction[ResultType]): ResultType = {
     forVertexWithId(vertexId, FunUtil.convert(f))
   }
 

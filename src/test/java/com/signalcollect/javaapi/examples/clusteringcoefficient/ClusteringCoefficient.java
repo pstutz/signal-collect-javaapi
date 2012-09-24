@@ -17,7 +17,7 @@
 package com.signalcollect.javaapi.examples.clusteringcoefficient;
 
 import java.util.ArrayList;
-import com.signalcollect.Edge;
+
 import com.signalcollect.ExecutionInformation;
 import com.signalcollect.StateForwarderEdge;
 import com.signalcollect.Vertex;
@@ -30,22 +30,11 @@ import com.signalcollect.javaapi.*;
  *          Date: Mar 11, 2012 Package: ch.uzh.ifi.ddis.clustering_coefficient
  * 
  *          Example Graph:
- *          
- *                  __3__          
- *                 /     \   
- *            1___2___5__4
- *                |  /| /
- *                |_/ |/
- *                6___7
- *                
- *          Clustering Coefficient Results per Vertex:
- *          	- 1: -
- *          	- 2: 0
- *          	- 3: 0.16667
- *          	- 4: 0.33334
- *          	- 5: 0.5
- *          	- 6: 0.66667
- *          	- 7: 0.66667 
+ * 
+ *          __3__ / \ 1___2___5__4 | /| / |_/ |/ 6___7
+ * 
+ *          Clustering Coefficient Results per Vertex: - 1: - - 2: 0 - 3:
+ *          0.16667 - 4: 0.33334 - 5: 0.5 - 6: 0.66667 - 7: 0.66667
  */
 public class ClusteringCoefficient {
 	public static void main(String[] args) {
@@ -75,32 +64,32 @@ public class ClusteringCoefficient {
 		graph.addVertex(new ClusteringCoefficientVertex(7, l7));
 
 		// initialize edges
-		graph.addEdge(new StateForwarderEdge<Integer, Integer>(1, 2));
+		graph.addEdge(1, new StateForwarderEdge<Integer>(2));
 
-		graph.addEdge(new StateForwarderEdge<Integer, Integer>(2, 3));
-		graph.addEdge(new StateForwarderEdge<Integer, Integer>(2, 1));
-		graph.addEdge(new StateForwarderEdge<Integer, Integer>(2, 6));
-		graph.addEdge(new StateForwarderEdge<Integer, Integer>(2, 5));
+		graph.addEdge(2, new StateForwarderEdge<Integer>(3));
+		graph.addEdge(2, new StateForwarderEdge<Integer>(1));
+		graph.addEdge(2, new StateForwarderEdge<Integer>(6));
+		graph.addEdge(2, new StateForwarderEdge<Integer>(5));
 
-		graph.addEdge(new StateForwarderEdge<Integer, Integer>(3, 2));
-		graph.addEdge(new StateForwarderEdge<Integer, Integer>(3, 4));
+		graph.addEdge(3, new StateForwarderEdge<Integer>(2));
+		graph.addEdge(3, new StateForwarderEdge<Integer>(4));
 
-		graph.addEdge(new StateForwarderEdge<Integer, Integer>(4, 7));
-		graph.addEdge(new StateForwarderEdge<Integer, Integer>(4, 5));
-		graph.addEdge(new StateForwarderEdge<Integer, Integer>(4, 3));
+		graph.addEdge(4, new StateForwarderEdge<Integer>(7));
+		graph.addEdge(4, new StateForwarderEdge<Integer>(5));
+		graph.addEdge(4, new StateForwarderEdge<Integer>(3));
 
-		graph.addEdge(new StateForwarderEdge<Integer, Integer>(5, 2));
-		graph.addEdge(new StateForwarderEdge<Integer, Integer>(5, 4));
-		graph.addEdge(new StateForwarderEdge<Integer, Integer>(5, 6));
-		graph.addEdge(new StateForwarderEdge<Integer, Integer>(5, 7));
+		graph.addEdge(5, new StateForwarderEdge<Integer>(2));
+		graph.addEdge(5, new StateForwarderEdge<Integer>(4));
+		graph.addEdge(5, new StateForwarderEdge<Integer>(6));
+		graph.addEdge(5, new StateForwarderEdge<Integer>(7));
 
-		graph.addEdge(new StateForwarderEdge<Integer, Integer>(6, 2));
-		graph.addEdge(new StateForwarderEdge<Integer, Integer>(6, 5));
-		graph.addEdge(new StateForwarderEdge<Integer, Integer>(6, 7));
+		graph.addEdge(6, new StateForwarderEdge<Integer>(2));
+		graph.addEdge(6, new StateForwarderEdge<Integer>(5));
+		graph.addEdge(6, new StateForwarderEdge<Integer>(7));
 
-		graph.addEdge(new StateForwarderEdge<Integer, Integer>(7, 4));
-		graph.addEdge(new StateForwarderEdge<Integer, Integer>(7, 5));
-		graph.addEdge(new StateForwarderEdge<Integer, Integer>(7, 6));
+		graph.addEdge(7, new StateForwarderEdge<Integer>(4));
+		graph.addEdge(7, new StateForwarderEdge<Integer>(5));
+		graph.addEdge(7, new StateForwarderEdge<Integer>(6));
 
 		ExecutionInformation stats = graph.execute(ExecutionConfiguration
 				.withExecutionMode(ExecutionMode.Synchronous()).withStepsLimit(
@@ -111,29 +100,26 @@ public class ClusteringCoefficient {
 
 		// print the state of every vertex in the graph.
 		graph.foreachVertex(new VertexCommand() {
-			public void f(Vertex v) {
+			public void f(Vertex<?, ?> v) {
 				System.out.println(v);
 			}
 		});
 
-		// calculate the clustering coefficient by going through the whole graph
+		// Calculate the clustering coefficient by going through the whole graph
 		// This is done after the neighborhood and the connection between
 		// vertices in the neighborhood are established by signaling through
 		// the graph.
 		graph.foreachVertex(new VertexCommand() {
-			public void f(Vertex v) {
+			@SuppressWarnings("unchecked")
+			public void f(Vertex<?, ?> v) {
 				ArrayList<Integer> v_state = (ArrayList<Integer>) v.state();
 				ArrayList<Integer> neighbors = new ArrayList<Integer>();
 
-				// find all neighbors
-				scala.collection.Iterator<scala.collection.Iterable<Edge>> it = v
-						.getOutgoingEdges().iterator();
-				while (it.hasNext()) {
-					scala.collection.Iterator<Edge> eit = it.next().iterator();
-					while (eit.hasNext()) {
-						Edge e = eit.next();
-						neighbors.add((Integer) e.id().targetId());
-					}
+				// Find all neighbors.
+				ClusteringCoefficientVertex castVertex = (ClusteringCoefficientVertex) v;
+				java.util.Set<Object> targetIds = castVertex.outgoingEdges().keySet();
+				for (Object targetId : targetIds) {
+					neighbors.add((Integer) targetId);
 				}
 				// find completed edges among neighbors
 				int count = 0;

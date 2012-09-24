@@ -22,11 +22,11 @@ package com.signalcollect.javaapi
 import com.signalcollect._
 
 object FunUtil {
-	def convert(c: VertexCommand): Function1[Vertex, Unit] = {
-		v: Vertex => c.f(v)
+	def convert(c: VertexCommand): Function1[Vertex[_, _], Unit] = {
+		v: Vertex[_, _] => c.f(v)
 	}
 
-	def convert[ReturnValue](f: VertexFunction[ReturnValue]): Function1[Vertex, ReturnValue] = {
-		v: Vertex => f.f(v)
+	def convert[ReturnValue](f: VertexFunction[ReturnValue]): Function1[Vertex[_, _], ReturnValue] = {
+		v: Vertex[_, _] => f.f(v)
 	}
 }

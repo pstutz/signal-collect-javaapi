@@ -1,5 +1,7 @@
 package com.signalcollect.javaapi.examples.pagerank;
 
+import com.signalcollect.GraphEditor;
+
 import com.signalcollect.javaapi.*;
 
 /**
@@ -34,10 +36,10 @@ public class PageRankVertex extends DataGraphVertex<Integer, Double, Double> {
 	 * @param mostRecentSignals all signals from pages that link to this page.
 	 * @return the new PageRank of this page.
 	 */
-	public Double collect(Double oldState, Iterable<Double> mostRecentSignals) {
+	public Double collect(Double oldState, Iterable<Double> mostRecentSignals, GraphEditor graphEditor) {
 		Double rankSum = 0.0;
-		for (Double signal : mostRecentSignals) {
-			rankSum += signal;
+		for (Object signal : mostRecentSignals) {
+			rankSum += (Double) signal;
 		}
 		return baseRank + dampingFactor * rankSum;
 	}

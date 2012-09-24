@@ -19,11 +19,9 @@
 
 package com.signalcollect.javaapi.examples.gameoflife;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 
-import com.signalcollect.Edge;
 import com.signalcollect.ExecutionInformation;
 import com.signalcollect.javaapi.*;
 import com.signalcollect.Graph;
@@ -45,7 +43,7 @@ public class GameOfLife {
 
 	private final int COLUMNS = 20; // Number of columns in the simulation grid
 	private final int ROWS = 20; // Number of rows in the simulation grid
-	private static final int NUMBER_OF_ITERATIONS = 50; // Maximal number of
+	private static final int NUMBER_OF_ITERATIONS = 100; // Maximal number of
 	// synchronization steps.
 	private PixelMap image = new PixelMap("Game of Life Simulation");
 	private Graph g;
@@ -70,9 +68,7 @@ public class GameOfLife {
 		// set up edges
 		for (int row = 0; row < ROWS; row++) {
 			for (int collumn = 0; collumn < COLUMNS; collumn++) {
-				for (Edge edge : generateOutgoingLinks(row, collumn)) {
-					g.addEdge(edge);
-				}
+				addOutgoingLinks(g, row, collumn);
 			}
 
 		}
@@ -121,22 +117,19 @@ public class GameOfLife {
 	 * @return list of all outgoing edges form the cell at the specified
 	 *         coordinates.
 	 */
-	private ArrayList<Edge> generateOutgoingLinks(int row, int column) {
+	private void addOutgoingLinks(Graph graph, int row, int column) {
 		int sourceId = generateVertexId(row, column);
-		ArrayList<Edge> outgoingLinks = new ArrayList<Edge>();
-
 		// iterates over all neighbors and the cell itself but the link to
 		// itself is excluded.
 		for (int colIt = (column - 1); colIt <= (column + 1); colIt++) {
 			for (int rowIt = (row - 1); rowIt <= (row + 1); rowIt++) {
 				if ((rowIt != row || colIt != column)
 						&& isValidCoordinate(rowIt, colIt)) {
-					outgoingLinks.add(new StateForwarderEdge<Integer, Integer>(
-							sourceId, generateVertexId(rowIt, colIt)));
+					graph.addEdge(sourceId, new StateForwarderEdge<Integer>(
+							generateVertexId(rowIt, colIt)));
 				}
 			}
 		}
-		return outgoingLinks;
 	}
 
 	/**
@@ -186,24 +179,25 @@ public class GameOfLife {
 		return seed;
 	}
 
-//	/**
-//	 * Generates the initialization data for a glider form that moves diagonally
-//	 * across the field
-//	 * 
-//	 * @return initialization data for a glider figure
-//	 */
-//	private boolean[] glider() {
-//		boolean[] seed = new boolean[ROWS * COLUMNS];
-//		for (int i = 0; i < seed.length; i++) {
-//			seed[i] = false;
-//		}
-//		seed[generateVertexId(0, 1)] = true;
-//		seed[generateVertexId(1, 2)] = true;
-//		seed[generateVertexId(2, 0)] = true;
-//		seed[generateVertexId(2, 1)] = true;
-//		seed[generateVertexId(2, 2)] = true;
-//		return seed;
-//	}
+	// /**
+	// * Generates the initialization data for a glider form that moves
+	// diagonally
+	// * across the field
+	// *
+	// * @return initialization data for a glider figure
+	// */
+	// private boolean[] glider() {
+	// boolean[] seed = new boolean[ROWS * COLUMNS];
+	// for (int i = 0; i < seed.length; i++) {
+	// seed[i] = false;
+	// }
+	// seed[generateVertexId(0, 1)] = true;
+	// seed[generateVertexId(1, 2)] = true;
+	// seed[generateVertexId(2, 0)] = true;
+	// seed[generateVertexId(2, 1)] = true;
+	// seed[generateVertexId(2, 2)] = true;
+	// return seed;
+	// }
 
 	/**
 	 * Runs the Game of Live simulation with simple visualization.
@@ -213,8 +207,8 @@ public class GameOfLife {
 	 */
 	public static void main(String[] args) throws InterruptedException {
 		GameOfLife simulation = new GameOfLife();
-//		simulation.init(simulation.glider());
-		 simulation.init(simulation.randomSeed());
+		// simulation.init(simulation.glider());
+		simulation.init(simulation.randomSeed());
 		for (int i = 0; i < NUMBER_OF_ITERATIONS; i++) {
 			simulation.executionStep(true);
 		}

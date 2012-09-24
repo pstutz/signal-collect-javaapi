@@ -30,7 +30,7 @@ import java.util.HashMap
  */
 class JavaIdStateAggregator[IdType, StateType] extends AggregationOperation[Map[IdType, StateType]] {
   val neutralElement = new HashMap[IdType, StateType]()
-  def extract(v: Vertex): Map[IdType, StateType] = {
+  def extract(v: Vertex[_, _]): Map[IdType, StateType] = {
     try {
       val map = new HashMap[IdType, StateType]()
       map.put(v.id.asInstanceOf[IdType], v.state.asInstanceOf[StateType])

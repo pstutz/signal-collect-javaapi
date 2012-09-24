@@ -22,6 +22,10 @@ package com.signalcollect.javaapi;
 import com.signalcollect.interfaces.*;
 
 import scala.collection.JavaConversions;
+import com.signalcollect.GraphEditor;
+
+import com.signalcollect.AbstractVertex;
+
 import java.util.LinkedList;
 
 /**
@@ -30,28 +34,52 @@ import java.util.LinkedList;
  * class to implement a specific algorithm by defining a `collect` function.
  */
 @SuppressWarnings("serial")
-public abstract class DataFlowVertex<IdTypeParameter, StateTypeParameter, SignalTypeParameter>
-		extends
-		JavaVertexWithResetStateAfterSignaling<IdTypeParameter, StateTypeParameter, SignalTypeParameter> {
+public abstract class DataFlowVertex<Id, State, Signal> extends
+		AbstractVertex<Id, State> {
+
+	Id id;
+	State state;
 
 	/**
 	 * @param vertexId
 	 *            Unique vertex id.
 	 * @param initialState
 	 *            The initial state of the vertex.
-	 * @param resetState
-	 *            The state will be set to `resetState` after signaling.
 	 */
-	public DataFlowVertex(IdTypeParameter vertexId,
-			StateTypeParameter initialState, StateTypeParameter resetState) {
-		super(vertexId, initialState, resetState);
+	public DataFlowVertex(Id vertexId, State initialState) {
+		this.id = vertexId;
+		this.state = initialState;
+	}
+
+	public Id id() {
+		return id;
+	}
+	
+	public State state() {
+		return state;
+	}
+
+	public void setState(State s) {
+		state = s;
+	}
+
+	public abstract State resetState();
+
+	/**
+	 * Delegates to superclass and resets the state to the initial state after
+	 * signaling.
+	 */
+	@Override
+	public void executeSignalOperation(GraphEditor graphEditor) {
+		super.executeSignalOperation(graphEditor);
+		setState(resetState());
 	}
 
 	/**
 	 * List of messages that have not been collected yet (not just signals, as
 	 * in the collect parameter).
 	 */
-	protected Iterable<SignalMessage<Object, IdTypeParameter, SignalTypeParameter>> uncollectedMessages = new LinkedList<SignalMessage<Object, IdTypeParameter, SignalTypeParameter>>();
+	Iterable<SignalMessage<Signal>> uncollectedMessages = new LinkedList<SignalMessage<Signal>>();
 
 	/**
 	 * Function that gets called by the framework whenever this vertex is
@@ -65,24 +93,24 @@ public abstract class DataFlowVertex<IdTypeParameter, StateTypeParameter, Signal
 	 *            an instance of MessageBus which can be used by this vertex to
 	 *            interact with the graph.
 	 */
+	@Override
 	public void executeCollectOperation(
-			scala.collection.Iterable<SignalMessage<?, ?, ?>> signalMessages,
-			MessageBus messageBus) {
-		LinkedList<SignalMessage<Object, IdTypeParameter, SignalTypeParameter>> newUncollectedMessages = new LinkedList<SignalMessage<Object, IdTypeParameter, SignalTypeParameter>>();
-		Iterable<SignalMessage<?, ?, ?>> javaMessages = JavaConversions
+			scala.collection.Iterable<SignalMessage<?>> signalMessages,
+			GraphEditor graphEditor) {
+		LinkedList<SignalMessage<Signal>> newUncollectedMessages = new LinkedList<SignalMessage<Signal>>();
+		Iterable<SignalMessage<?>> javaMessages = JavaConversions
 				.asJavaIterable(signalMessages);
-		LinkedList<SignalTypeParameter> uncollectedSignals = new LinkedList<SignalTypeParameter>();
-		for (SignalMessage<?, ?, ?> message : javaMessages) {
+		LinkedList<Signal> uncollectedSignals = new LinkedList<Signal>();
+		for (SignalMessage<?> message : javaMessages) {
 			@SuppressWarnings("unchecked")
-			SignalTypeParameter castSignal = (SignalTypeParameter) message
-					.signal();
+			Signal castSignal = (Signal) message.signal();
 			uncollectedSignals.add(castSignal);
 			@SuppressWarnings("unchecked")
-			SignalMessage<Object, IdTypeParameter, SignalTypeParameter> castMessage = (SignalMessage<Object, IdTypeParameter, SignalTypeParameter>) message;
+			SignalMessage<Signal> castMessage = (SignalMessage<Signal>) message;
 			newUncollectedMessages.add(castMessage);
 		}
 		uncollectedMessages = newUncollectedMessages;
-		setState(collect(getState(), uncollectedSignals));
+		setState(collect(state(), uncollectedSignals));
 	}
 
 	/**
@@ -99,7 +127,7 @@ public abstract class DataFlowVertex<IdTypeParameter, StateTypeParameter, Signal
 	 * 
 	 * @return The new vertex state.
 	 */
-	public abstract StateTypeParameter collect(StateTypeParameter oldState,
-			Iterable<SignalTypeParameter> uncollectedSignals);
-	
+	public abstract State collect(State oldState,
+			Iterable<Signal> uncollectedSignals);
+
 }
