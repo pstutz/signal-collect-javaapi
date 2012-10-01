@@ -75,7 +75,7 @@ public abstract class DataGraphVertex<Id, State, Signal> extends
 	@SuppressWarnings("unchecked")
 	@Override
 	public void executeCollectOperation(
-			scala.collection.Iterable<SignalMessage<?>> signalMessages,
+			scala.collection.mutable.IndexedSeq<SignalMessage<?>> signalMessages,
 			GraphEditor graphEditor) {
 		Iterable<SignalMessage<?>> javaMessages = JavaConversions
 				.asJavaIterable(signalMessages);

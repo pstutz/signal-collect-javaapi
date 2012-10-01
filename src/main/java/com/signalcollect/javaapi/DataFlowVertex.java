@@ -95,7 +95,7 @@ public abstract class DataFlowVertex<Id, State, Signal> extends
 	 */
 	@Override
 	public void executeCollectOperation(
-			scala.collection.Iterable<SignalMessage<?>> signalMessages,
+			scala.collection.mutable.IndexedSeq<SignalMessage<?>> signalMessages,
 			GraphEditor graphEditor) {
 		LinkedList<SignalMessage<Signal>> newUncollectedMessages = new LinkedList<SignalMessage<Signal>>();
 		Iterable<SignalMessage<?>> javaMessages = JavaConversions
