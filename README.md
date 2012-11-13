@@ -9,7 +9,7 @@ The signal-collect (core) project is required for the signal-collect-javaapi pro
 
 Make sure to clone the signal-collect-javaapi project inside the same folder as the signal-collect-project. 
 
-Check that both projects are on their Master branches and are their latest versions. 
+Check that both projects are on their Master branches and are at their latest versions. 
 
 Go to the project folder and start SBT on the command line. The output should end with:
 "[info] Set current project to signal-collect-javaapi (in build file:XYZ/signal-collect-javaapi/)"
