@@ -11,9 +11,9 @@ import com.signalcollect.DefaultEdge;
  *
  */
 @SuppressWarnings("serial")
-public class PageRankEdge extends DefaultEdge<Integer> {
+public class PageRankEdge extends DefaultEdge<Object> {
 
-	public PageRankEdge(Integer targetId) {
+	public PageRankEdge(Object targetId) {
 		super(targetId);
 	}
 	

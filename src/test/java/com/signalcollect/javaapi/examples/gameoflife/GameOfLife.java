@@ -24,7 +24,6 @@ import java.util.Random;
 
 import com.signalcollect.ExecutionInformation;
 import com.signalcollect.javaapi.*;
-import com.signalcollect.Graph;
 import com.signalcollect.StateForwarderEdge;
 import com.signalcollect.configuration.ExecutionMode;
 
@@ -125,7 +124,7 @@ public class GameOfLife {
 			for (int rowIt = (row - 1); rowIt <= (row + 1); rowIt++) {
 				if ((rowIt != row || colIt != column)
 						&& isValidCoordinate(rowIt, colIt)) {
-					graph.addEdge(sourceId, new StateForwarderEdge<Integer>(
+					graph.addEdge(sourceId, new StateForwarderEdge<Object>(
 							generateVertexId(rowIt, colIt)));
 				}
 			}

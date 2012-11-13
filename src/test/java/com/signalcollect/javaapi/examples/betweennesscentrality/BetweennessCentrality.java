@@ -64,23 +64,23 @@ public class BetweennessCentrality {
 		}
 
 		// initialize the edges
-		graph.addEdge(1, new StateForwarderEdge<Integer>(2));
+		graph.addEdge(1, new StateForwarderEdge<Object>(2));
 
-		graph.addEdge(2, new StateForwarderEdge<Integer>(3));
-		graph.addEdge(2, new StateForwarderEdge<Integer>(1));
-		graph.addEdge(2, new StateForwarderEdge<Integer>(4));
+		graph.addEdge(2, new StateForwarderEdge<Object>(3));
+		graph.addEdge(2, new StateForwarderEdge<Object>(1));
+		graph.addEdge(2, new StateForwarderEdge<Object>(4));
 
-		graph.addEdge(3, new StateForwarderEdge<Integer>(5));
-		graph.addEdge(3, new StateForwarderEdge<Integer>(2));
-		graph.addEdge(3, new StateForwarderEdge<Integer>(4));
+		graph.addEdge(3, new StateForwarderEdge<Object>(5));
+		graph.addEdge(3, new StateForwarderEdge<Object>(2));
+		graph.addEdge(3, new StateForwarderEdge<Object>(4));
 
-		graph.addEdge(4, new StateForwarderEdge<Integer>(2));
-		graph.addEdge(4, new StateForwarderEdge<Integer>(3));
+		graph.addEdge(4, new StateForwarderEdge<Object>(2));
+		graph.addEdge(4, new StateForwarderEdge<Object>(3));
 
-		graph.addEdge(5, new StateForwarderEdge<Integer>(6));
-		graph.addEdge(5, new StateForwarderEdge<Integer>(3));
+		graph.addEdge(5, new StateForwarderEdge<Object>(6));
+		graph.addEdge(5, new StateForwarderEdge<Object>(3));
 
-		graph.addEdge(6, new StateForwarderEdge<Integer>(5));
+		graph.addEdge(6, new StateForwarderEdge<Object>(5));
 
 		ExecutionInformation stats = graph.execute();
 
@@ -164,8 +164,8 @@ public class BetweennessCentrality {
 		@SuppressWarnings("unchecked")
 		@Override
 		public HashMap<Set<Integer>, PathValue> extract(Vertex<?, ?> v) {
-			return ((HashMap<Set<Integer>, PathValue>) ((HashMap<?, ?>) v.state())
-					.clone());
+			return ((HashMap<Set<Integer>, PathValue>) ((HashMap<?, ?>) v
+					.state()).clone());
 		}
 
 		@Override

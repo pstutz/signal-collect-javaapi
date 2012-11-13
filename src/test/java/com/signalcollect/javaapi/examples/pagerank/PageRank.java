@@ -6,6 +6,7 @@ import com.signalcollect.javaapi.*;
 
 /**
  * Test driver for a PageRank computation
+ * 
  * @see <a href="http://en.wikipedia.org/wiki/PageRank">PageRank algorithm</a>
  * 
  * @author Philip Stutz
@@ -22,7 +23,7 @@ public class PageRank {
 	 * default execution parameters.
 	 * 
 	 * the graph has the following structure:
-	 *  
+	 * 
 	 * (1) <=> (2) <=> (3)
 	 */
 	public void executePageRank() {
@@ -37,7 +38,7 @@ public class PageRank {
 		ExecutionInformation stats = graph.execute();
 		System.out.println(stats);
 		// Print the state of every vertex in the graph.
-		graph.foreachVertex(new VertexCommand(){
+		graph.foreachVertex(new VertexCommand() {
 			public void f(Vertex<?, ?> v) {
 				System.out.println(v);
 			}

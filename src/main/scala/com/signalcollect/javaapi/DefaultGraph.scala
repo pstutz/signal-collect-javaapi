@@ -21,12 +21,15 @@ package com.signalcollect.javaapi
 
 import com.signalcollect.{ Vertex, DefaultGraph => ScalaDefaultGraph, Graph => ScalaGraph }
 import com.signalcollect.configuration.GraphConfiguration
+import scala.reflect.ClassTag
 
-trait Graph extends ScalaGraph with JavaGraphFunctions
+trait Graph extends ScalaGraph[Object, Object] with JavaGraphFunctions
 
-class DefaultGraph(config: GraphConfiguration = GraphConfiguration()) extends ScalaDefaultGraph(config) with Graph
+class DefaultGraph(config: GraphConfiguration = GraphConfiguration()) extends ScalaDefaultGraph[Object, Object](config) with Graph {
+  override def toString: String = "javaapi.DefaultGraph"
+}
 
-trait JavaGraphFunctions extends ScalaGraph {
+trait JavaGraphFunctions extends ScalaGraph[Object, Object] {
 
   /**
    *  Executes the function `f` on the vertex with id `vertexId` and returns the result.
@@ -47,7 +50,7 @@ trait JavaGraphFunctions extends ScalaGraph {
    *
    *  @usecase def forVertexWithId(vertexId: Any, f: VertexFunction[String]): String
    */
-  def forVertexWithId[VertexType <: Vertex[_, _], ResultType](vertexId: Any, f: VertexFunction[ResultType]): ResultType = {
+  def forVertexWithId[VertexType <: Vertex[Object, _], ResultType](vertexId: Object, f: VertexFunction[ResultType]): ResultType = {
     forVertexWithId(vertexId, FunUtil.convert(f))
   }
 
@@ -62,6 +65,5 @@ trait JavaGraphFunctions extends ScalaGraph {
   def foreachVertex(c: VertexCommand) {
     foreachVertex(FunUtil.convert(c))
   }
-  
-  
+
 }

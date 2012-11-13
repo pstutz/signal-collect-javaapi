@@ -18,8 +18,6 @@ package com.signalcollect.javaapi.examples.clusteringcoefficient;
 
 import java.util.ArrayList;
 
-import com.signalcollect.GraphEditor;
-
 import com.signalcollect.javaapi.DataGraphVertex;
 
 /**
@@ -54,8 +52,7 @@ public class ClusteringCoefficientVertex extends
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<Integer> collect(ArrayList<Integer> oldState,
-			Iterable<ArrayList<Integer>> mostRecentSignals,
-			GraphEditor graphEditor) {
+			Iterable<ArrayList<Integer>> mostRecentSignals) {
 		ArrayList<Integer> newState = (ArrayList<Integer>) oldState.clone();
 
 		// Get all the neighbors of the vertex and add their neighbors to the

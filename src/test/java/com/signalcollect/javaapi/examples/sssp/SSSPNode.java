@@ -3,8 +3,6 @@ package com.signalcollect.javaapi.examples.sssp;
 import com.signalcollect.javaapi.DataGraphVertex;
 import java.lang.Iterable;
 
-import com.signalcollect.GraphEditor;
-
 /**
  * Vertex in a graph for a Single Source Shortest Path (SSSP) computation.
  * 
@@ -30,7 +28,7 @@ public class SSSPNode extends DataGraphVertex<Integer, Integer, Integer> {
 	 * @return The new vertex state.
 	 */
 	@Override
-	public Integer collect(Integer oldState, Iterable<Integer> mostRecentSignals, GraphEditor graphEditor) {
+	public Integer collect(Integer oldState, Iterable<Integer> mostRecentSignals) {
 		int minDistance = oldState;
 		for (int signal : mostRecentSignals) {
 			if (signal < minDistance) {

@@ -26,8 +26,9 @@ import com.signalcollect.interfaces.MessageBusFactory
 import com.signalcollect.interfaces.WorkerFactory
 import com.signalcollect.interfaces.StorageFactory
 import com.signalcollect.nodeprovisioning.NodeProvisioner
+import scala.reflect.ClassTag
 
-class GraphBuilder(config: GraphConfiguration) extends ScalaGraphBuilder(config) {
+class GraphBuilder(config: GraphConfiguration) extends ScalaGraphBuilder[Object, Object](config) {
 
   def this() = this(GraphConfiguration())
 
@@ -38,22 +39,32 @@ class GraphBuilder(config: GraphConfiguration) extends ScalaGraphBuilder(config)
    *  to parameters that are the same as the ones in this instance, unless explicitly set differently.
    */
   override protected def newLocalBuilder(
+    consoleEnabled: Boolean = config.consoleEnabled,
     loggingLevel: Int = config.loggingLevel,
     logger: LogMessage => Unit = config.logger,
     workerFactory: WorkerFactory = config.workerFactory,
     messageBusFactory: MessageBusFactory = config.messageBusFactory,
     storageFactory: StorageFactory = config.storageFactory,
-    nodeProvisioner: NodeProvisioner = config.nodeProvisioner): GraphBuilder = {
+    statusUpdateIntervalInMillis: Long = config.statusUpdateIntervalInMillis,
+    akkaDispatcher: AkkaDispatcher = config.akkaDispatcher,
+    akkaMessageCompression: Boolean = config.akkaMessageCompression,
+    nodeProvisioner: NodeProvisioner = config.nodeProvisioner,
+    throttleInboxThresholdPerWorker: Int = config.throttleInboxThresholdPerWorker,
+    throttleWorkerQueueThresholdInMilliseconds: Int = config.throttleWorkerQueueThresholdInMilliseconds): GraphBuilder = {
     new GraphBuilder(
       GraphConfiguration(
-        maxInboxSize = config.maxInboxSize,
+        consoleEnabled = consoleEnabled,
         loggingLevel = loggingLevel,
         logger = logger,
         workerFactory = workerFactory,
         messageBusFactory = messageBusFactory,
         storageFactory = storageFactory,
-        statusUpdateIntervalInMillis = config.statusUpdateIntervalInMillis,
-        akkaDispatcher = config.akkaDispatcher,
-        nodeProvisioner = nodeProvisioner))
+        statusUpdateIntervalInMillis = statusUpdateIntervalInMillis,
+        akkaDispatcher = akkaDispatcher,
+        akkaMessageCompression = akkaMessageCompression,
+        nodeProvisioner = nodeProvisioner,
+        throttleInboxThresholdPerWorker = throttleInboxThresholdPerWorker,
+        throttleWorkerQueueThresholdInMilliseconds = throttleWorkerQueueThresholdInMilliseconds))
   }
+
 }

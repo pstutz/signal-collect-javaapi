@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.signalcollect.GraphEditor;
 import com.signalcollect.javaapi.DataGraphVertex;
 
 /**
@@ -59,8 +58,7 @@ public class BetweennessCentralityVertex
 	@SuppressWarnings("unchecked")
 	public HashMap<Set<Integer>, PathValue> collect(
 			HashMap<Set<Integer>, PathValue> oldState,
-			Iterable<HashMap<Set<Integer>, PathValue>> mostRecentSignals,
-			GraphEditor graphEditor) {
+			Iterable<HashMap<Set<Integer>, PathValue>> mostRecentSignals) {
 		HashMap<Set<Integer>, PathValue> newState = (HashMap<Set<Integer>, PathValue>) ((HashMap<?, ?>) oldState)
 				.clone();
 

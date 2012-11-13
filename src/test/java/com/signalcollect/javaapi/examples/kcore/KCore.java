@@ -80,57 +80,57 @@ public class KCore {
 		graph.addVertex(new KCoreVertex(15, -1));
 
 		// initialize the edges
-		graph.addEdge(1, new StateForwarderEdge<Integer>(5));
-		graph.addEdge(2, new StateForwarderEdge<Integer>(5));
-		graph.addEdge(3, new StateForwarderEdge<Integer>(5));
-		graph.addEdge(4, new StateForwarderEdge<Integer>(5));
-		graph.addEdge(5, new StateForwarderEdge<Integer>(1));
-		graph.addEdge(5, new StateForwarderEdge<Integer>(2));
-		graph.addEdge(5, new StateForwarderEdge<Integer>(3));
-		graph.addEdge(5, new StateForwarderEdge<Integer>(4));
+		graph.addEdge(1, new StateForwarderEdge<Object>(5));
+		graph.addEdge(2, new StateForwarderEdge<Object>(5));
+		graph.addEdge(3, new StateForwarderEdge<Object>(5));
+		graph.addEdge(4, new StateForwarderEdge<Object>(5));
+		graph.addEdge(5, new StateForwarderEdge<Object>(1));
+		graph.addEdge(5, new StateForwarderEdge<Object>(2));
+		graph.addEdge(5, new StateForwarderEdge<Object>(3));
+		graph.addEdge(5, new StateForwarderEdge<Object>(4));
 
-		graph.addEdge(5, new StateForwarderEdge<Integer>(6));
-		graph.addEdge(6, new StateForwarderEdge<Integer>(5));
+		graph.addEdge(5, new StateForwarderEdge<Object>(6));
+		graph.addEdge(6, new StateForwarderEdge<Object>(5));
 
-		graph.addEdge(6, new StateForwarderEdge<Integer>(7));
-		graph.addEdge(6, new StateForwarderEdge<Integer>(8));
-		graph.addEdge(6, new StateForwarderEdge<Integer>(12));
-		graph.addEdge(6, new StateForwarderEdge<Integer>(15));
-		graph.addEdge(7, new StateForwarderEdge<Integer>(6));
-		graph.addEdge(8, new StateForwarderEdge<Integer>(6));
-		graph.addEdge(12, new StateForwarderEdge<Integer>(6));
-		graph.addEdge(15, new StateForwarderEdge<Integer>(6));
+		graph.addEdge(6, new StateForwarderEdge<Object>(7));
+		graph.addEdge(6, new StateForwarderEdge<Object>(8));
+		graph.addEdge(6, new StateForwarderEdge<Object>(12));
+		graph.addEdge(6, new StateForwarderEdge<Object>(15));
+		graph.addEdge(7, new StateForwarderEdge<Object>(6));
+		graph.addEdge(8, new StateForwarderEdge<Object>(6));
+		graph.addEdge(12, new StateForwarderEdge<Object>(6));
+		graph.addEdge(15, new StateForwarderEdge<Object>(6));
 
-		graph.addEdge(7, new StateForwarderEdge<Integer>(8));
-		graph.addEdge(8, new StateForwarderEdge<Integer>(7));
+		graph.addEdge(7, new StateForwarderEdge<Object>(8));
+		graph.addEdge(8, new StateForwarderEdge<Object>(7));
 
-		graph.addEdge(8, new StateForwarderEdge<Integer>(15));
-		graph.addEdge(8, new StateForwarderEdge<Integer>(12));
-		graph.addEdge(8, new StateForwarderEdge<Integer>(9));
-		graph.addEdge(15, new StateForwarderEdge<Integer>(8));
-		graph.addEdge(12, new StateForwarderEdge<Integer>(8));
-		graph.addEdge(9, new StateForwarderEdge<Integer>(8));
+		graph.addEdge(8, new StateForwarderEdge<Object>(15));
+		graph.addEdge(8, new StateForwarderEdge<Object>(12));
+		graph.addEdge(8, new StateForwarderEdge<Object>(9));
+		graph.addEdge(15, new StateForwarderEdge<Object>(8));
+		graph.addEdge(12, new StateForwarderEdge<Object>(8));
+		graph.addEdge(9, new StateForwarderEdge<Object>(8));
 
-		graph.addEdge(9, new StateForwarderEdge<Integer>(10));
-		graph.addEdge(9, new StateForwarderEdge<Integer>(12));
-		graph.addEdge(10, new StateForwarderEdge<Integer>(9));
-		graph.addEdge(12, new StateForwarderEdge<Integer>(9));
+		graph.addEdge(9, new StateForwarderEdge<Object>(10));
+		graph.addEdge(9, new StateForwarderEdge<Object>(12));
+		graph.addEdge(10, new StateForwarderEdge<Object>(9));
+		graph.addEdge(12, new StateForwarderEdge<Object>(9));
 
-		graph.addEdge(10, new StateForwarderEdge<Integer>(11));
-		graph.addEdge(11, new StateForwarderEdge<Integer>(10));
+		graph.addEdge(10, new StateForwarderEdge<Object>(11));
+		graph.addEdge(11, new StateForwarderEdge<Object>(10));
 
-		graph.addEdge(11, new StateForwarderEdge<Integer>(12));
-		graph.addEdge(12, new StateForwarderEdge<Integer>(11));
+		graph.addEdge(11, new StateForwarderEdge<Object>(12));
+		graph.addEdge(12, new StateForwarderEdge<Object>(11));
 
-		graph.addEdge(12, new StateForwarderEdge<Integer>(13));
-		graph.addEdge(12, new StateForwarderEdge<Integer>(15));
-		graph.addEdge(13, new StateForwarderEdge<Integer>(12));
-		graph.addEdge(15, new StateForwarderEdge<Integer>(12));
+		graph.addEdge(12, new StateForwarderEdge<Object>(13));
+		graph.addEdge(12, new StateForwarderEdge<Object>(15));
+		graph.addEdge(13, new StateForwarderEdge<Object>(12));
+		graph.addEdge(15, new StateForwarderEdge<Object>(12));
 
-		graph.addEdge(13, new StateForwarderEdge<Integer>(14));
-		graph.addEdge(13, new StateForwarderEdge<Integer>(15));
-		graph.addEdge(14, new StateForwarderEdge<Integer>(13));
-		graph.addEdge(15, new StateForwarderEdge<Integer>(13));
+		graph.addEdge(13, new StateForwarderEdge<Object>(14));
+		graph.addEdge(13, new StateForwarderEdge<Object>(15));
+		graph.addEdge(14, new StateForwarderEdge<Object>(13));
+		graph.addEdge(15, new StateForwarderEdge<Object>(13));
 
 		ExecutionInformation stats = graph.execute(ExecutionConfiguration
 				.withExecutionMode(ExecutionMode.Synchronous()));

@@ -19,13 +19,9 @@
 
 package com.signalcollect.javaapi;
 
-import com.signalcollect.interfaces.*;
-
-import scala.collection.JavaConversions;
+import scala.Option;
 import com.signalcollect.GraphEditor;
-
 import com.signalcollect.AbstractVertex;
-
 import java.util.LinkedList;
 
 /**
@@ -35,7 +31,7 @@ import java.util.LinkedList;
  */
 @SuppressWarnings("serial")
 public abstract class DataFlowVertex<Id, State, Signal> extends
-		AbstractVertex<Id, State> {
+		AbstractVertex<Object, State> {
 
 	Id id;
 	State state;
@@ -54,13 +50,14 @@ public abstract class DataFlowVertex<Id, State, Signal> extends
 	public Id id() {
 		return id;
 	}
-	
+
 	public State state() {
 		return state;
 	}
 
-	public void setState(State s) {
-		state = s;
+	@SuppressWarnings("unchecked")
+	public void setState(Object s) {
+		state = (State) s;
 	}
 
 	public abstract State resetState();
@@ -69,6 +66,7 @@ public abstract class DataFlowVertex<Id, State, Signal> extends
 	 * Delegates to superclass and resets the state to the initial state after
 	 * signaling.
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void executeSignalOperation(GraphEditor graphEditor) {
 		super.executeSignalOperation(graphEditor);
@@ -76,10 +74,9 @@ public abstract class DataFlowVertex<Id, State, Signal> extends
 	}
 
 	/**
-	 * List of messages that have not been collected yet (not just signals, as
-	 * in the collect parameter).
+	 * List of signals that have not been collected yet.
 	 */
-	Iterable<SignalMessage<Signal>> uncollectedMessages = new LinkedList<SignalMessage<Signal>>();
+	LinkedList<Signal> uncollectedSignals = new LinkedList<Signal>();
 
 	/**
 	 * Function that gets called by the framework whenever this vertex is
@@ -93,24 +90,25 @@ public abstract class DataFlowVertex<Id, State, Signal> extends
 	 *            an instance of MessageBus which can be used by this vertex to
 	 *            interact with the graph.
 	 */
+	@SuppressWarnings({ "rawtypes" })
 	@Override
-	public void executeCollectOperation(
-			scala.collection.mutable.IndexedSeq<SignalMessage<?>> signalMessages,
-			GraphEditor graphEditor) {
-		LinkedList<SignalMessage<Signal>> newUncollectedMessages = new LinkedList<SignalMessage<Signal>>();
-		Iterable<SignalMessage<?>> javaMessages = JavaConversions
-				.asJavaIterable(signalMessages);
-		LinkedList<Signal> uncollectedSignals = new LinkedList<Signal>();
-		for (SignalMessage<?> message : javaMessages) {
-			@SuppressWarnings("unchecked")
-			Signal castSignal = (Signal) message.signal();
-			uncollectedSignals.add(castSignal);
-			@SuppressWarnings("unchecked")
-			SignalMessage<Signal> castMessage = (SignalMessage<Signal>) message;
-			newUncollectedMessages.add(castMessage);
-		}
-		uncollectedMessages = newUncollectedMessages;
+	public void executeCollectOperation(GraphEditor graphEditor) {
 		setState(collect(state(), uncollectedSignals));
+		uncollectedSignals = new LinkedList<Signal>();
+	}
+
+	/**
+	 * Delivers signals that are addressed to this specific vertex
+	 * 
+	 * @param signal
+	 *            the the signal to deliver to this vertex
+	 * 
+	 * @return true if the vertex decided to collect immediately.
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public boolean deliverSignal(Object signal, Option sourceId) {
+		uncollectedSignals.add((Signal) signal);
+		return false;
 	}
 
 	/**
@@ -129,5 +127,22 @@ public abstract class DataFlowVertex<Id, State, Signal> extends
 	 */
 	public abstract State collect(State oldState,
 			Iterable<Signal> uncollectedSignals);
+
+	/**
+	 * This method is used by the framework in order to decide if the vertex'
+	 * collect operation should be executed.
+	 * 
+	 * @return the score value. The meaning of this value depends on the
+	 *         thresholds set in the framework.
+	 */
+	public double scoreCollect() {
+		if (!uncollectedSignals.isEmpty()) {
+			return 1.0;
+		} else if (edgesModifiedSinceCollectOperation()) {
+			return 1.0;
+		} else {
+			return 0.0;
+		}
+	}
 
 }

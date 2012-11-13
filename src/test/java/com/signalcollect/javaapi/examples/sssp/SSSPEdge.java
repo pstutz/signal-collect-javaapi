@@ -11,9 +11,9 @@ import com.signalcollect.DefaultEdge;
  * 
  */
 @SuppressWarnings("serial")
-public class SSSPEdge extends DefaultEdge<Integer> {
+public class SSSPEdge extends DefaultEdge<Object> {
 
-	SSSPEdge(int targetId) {
+	SSSPEdge(Object targetId) {
 		super(targetId);
 	}
 

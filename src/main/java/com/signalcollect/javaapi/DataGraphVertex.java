@@ -19,15 +19,10 @@
 
 package com.signalcollect.javaapi;
 
-import scala.collection.JavaConversions;
+import scala.Option;
 import com.signalcollect.Edge;
-
 import com.signalcollect.AbstractVertex;
-
 import com.signalcollect.GraphEditor;
-
-import com.signalcollect.interfaces.SignalMessage;
-
 import java.util.HashMap;
 
 /**
@@ -37,7 +32,7 @@ import java.util.HashMap;
  */
 @SuppressWarnings("serial")
 public abstract class DataGraphVertex<Id, State, Signal> extends
-		AbstractVertex<Id, State> {
+		AbstractVertex<Object, State> {
 
 	Id id;
 	State state;
@@ -72,17 +67,24 @@ public abstract class DataGraphVertex<Id, State, Signal> extends
 	 *            an instance of MessageBus which can be used by this vertex to
 	 *            interact with the graph.
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes" })
 	@Override
-	public void executeCollectOperation(
-			scala.collection.mutable.IndexedSeq<SignalMessage<?>> signalMessages,
-			GraphEditor graphEditor) {
-		Iterable<SignalMessage<?>> javaMessages = JavaConversions
-				.asJavaIterable(signalMessages);
-		for (SignalMessage<?> message : javaMessages) {
-			mostRecentSignalMap.put(message.edgeId(), (Signal) message.signal());
-		}
-		setState(collect(state(), mostRecentSignalMap.values(), graphEditor));
+	public void executeCollectOperation(GraphEditor graphEditor) {
+		setState(collect(state(), mostRecentSignalMap.values()));
+	}
+
+	/**
+	 * Delivers signals that are addressed to this specific vertex
+	 * 
+	 * @param signal
+	 *            the the signal to deliver to this vertex
+	 * 
+	 * @return true if the vertex decided to collect immediately.
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public boolean deliverSignal(Object signal, Option sourceId) {
+		mostRecentSignalMap.put(sourceId.get(), (Signal) signal);
+		return false;
 	}
 
 	public Id id() {
@@ -93,8 +95,9 @@ public abstract class DataGraphVertex<Id, State, Signal> extends
 		return state;
 	}
 
-	public void setState(State s) {
-		state = s;
+	@SuppressWarnings("unchecked")
+	public void setState(Object s) {
+		state = (State) s;
 	}
 
 	/**
@@ -115,12 +118,13 @@ public abstract class DataGraphVertex<Id, State, Signal> extends
 	 * @return The new vertex state.
 	 */
 	public abstract State collect(State oldState,
-			Iterable<Signal> mostRecentSignals, GraphEditor graphEditor);
+			Iterable<Signal> mostRecentSignals);
 
 	public Double sumOfOutWeights = 0.0;
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public boolean addEdge(Edge<?> e, GraphEditor graphEditor) {
+	public boolean addEdge(Edge e, GraphEditor graphEditor) {
 		Boolean added = super.addEdge(e, graphEditor);
 		if (added) {
 			sumOfOutWeights += e.weight();
@@ -128,6 +132,7 @@ public abstract class DataGraphVertex<Id, State, Signal> extends
 		return added;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public boolean removeEdge(Object targetId, GraphEditor graphEditor) {
 		Double weightToSubtract = 0.0;
 		Edge<?> outgoingEdge = outgoingEdges().get(targetId);
@@ -140,4 +145,20 @@ public abstract class DataGraphVertex<Id, State, Signal> extends
 		}
 		return removed;
 	}
+	
+	  /**
+	   * This method is used by the framework in order to decide if the vertex' collect operation
+	   * should be executed.
+	   *
+	   * @return the score value. The meaning of this value depends on the thresholds set in the framework.
+	   */
+	  public double scoreCollect() {
+	    if (!mostRecentSignalMap.isEmpty()) {
+	      return 1.0;
+	    } else if (edgesModifiedSinceCollectOperation()) {
+	      return 1.0;
+	    } else {
+	      return 0.0;
+	    }
+	  }
 }
