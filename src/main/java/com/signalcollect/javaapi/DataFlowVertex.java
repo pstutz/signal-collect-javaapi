@@ -47,7 +47,7 @@ public abstract class DataFlowVertex<Id, State, Signal> extends
 		this.state = initialState;
 	}
 
-	public Id id() {
+	public Id getId() {
 		return id;
 	}
 
