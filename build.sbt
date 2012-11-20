@@ -8,6 +8,10 @@ version := "2.0.0-SNAPSHOT"
 
 organization := "com.signalcollect"
 
+sources in (Compile, doc) ~= (_ filter (_.getName endsWith ".scala"))
+
+jarName in assembly := "signal-collect-javapi-2.0-SNAPSHOT.jar"
+
 scalaVersion := "2.10.0-RC2"
 
 EclipseKeys.withSource := true
