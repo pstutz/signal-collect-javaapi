@@ -26,12 +26,11 @@ public class SSSPEdge extends DefaultEdge<Object> {
 	 */
 	@Override
 	public Object signal(Vertex<?, ?> sourceVertex) {
-		if ((Integer) sourceVertex.state() < Integer.MAX_VALUE) { // To prevent
-																	// integer
-																	// overflow.
-			return (Integer) sourceVertex.state() + (int) this.weight();
+		Integer distanceToSource = (Integer) sourceVertex.state();
+		if (distanceToSource != Integer.MAX_VALUE) {
+			return distanceToSource + (int) this.weight();
 		} else {
-			return (Integer) sourceVertex.state();
+			return distanceToSource;
 		}
 	}
 }

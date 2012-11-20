@@ -6,24 +6,31 @@ import java.lang.Iterable;
 /**
  * Vertex in a graph for a Single Source Shortest Path (SSSP) computation.
  * 
+ * The algorithm only works correctly if the computed distances are below the
+ * reserved number Integer.MAX_VALUE, which is used to represent infinite
+ * distances.
+ * 
  * @author Daniel Strebel
- *
+ * 
  */
 @SuppressWarnings("serial")
 public class SSSPNode extends DataGraphVertex<Integer, Integer, Integer> {
 
 	public SSSPNode(int id) {
+		// Integer.MAX_VALUE represents infinite distances.
 		this(id, Integer.MAX_VALUE);
 	}
-	
+
 	public SSSPNode(int id, int initialDistance) {
 		super(id, initialDistance);
 	}
 
 	/**
-	 * Computes the new state of the vertex as the minimum of all incoming signal and the vertex's current state.
+	 * Computes the new state of the vertex as the minimum of all incoming
+	 * signal and the vertex's current state.
 	 * 
-	 * @param mostRecentSignals stores all signals received per incoming edge. 
+	 * @param mostRecentSignals
+	 *            stores all signals received per incoming edge.
 	 * 
 	 * @return The new vertex state.
 	 */
