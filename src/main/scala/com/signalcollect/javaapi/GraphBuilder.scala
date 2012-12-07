@@ -49,9 +49,7 @@ class GraphBuilder(config: GraphConfiguration) extends ScalaGraphBuilder[Object,
     akkaDispatcher: AkkaDispatcher = config.akkaDispatcher,
     akkaMessageCompression: Boolean = config.akkaMessageCompression,
     nodeProvisioner: NodeProvisioner = config.nodeProvisioner,
-    heartbeatIntervalInMilliseconds: Long = config.heartbeatIntervalInMilliseconds,
-    throttleInboxThresholdPerWorker: Int = config.throttleInboxThresholdPerWorker,
-    throttleWorkerQueueThresholdInMilliseconds: Int = config.throttleWorkerQueueThresholdInMilliseconds): GraphBuilder = {
+    heartbeatIntervalInMilliseconds: Long = config.heartbeatIntervalInMilliseconds): GraphBuilder = {
     new GraphBuilder(
       GraphConfiguration(
         consoleEnabled = consoleEnabled,
@@ -64,9 +62,7 @@ class GraphBuilder(config: GraphConfiguration) extends ScalaGraphBuilder[Object,
         akkaDispatcher = akkaDispatcher,
         akkaMessageCompression = akkaMessageCompression,
         nodeProvisioner = nodeProvisioner,
-        heartbeatIntervalInMilliseconds = heartbeatIntervalInMilliseconds,
-        throttleInboxThresholdPerWorker = throttleInboxThresholdPerWorker,
-        throttleWorkerQueueThresholdInMilliseconds = throttleWorkerQueueThresholdInMilliseconds))
+        heartbeatIntervalInMilliseconds = heartbeatIntervalInMilliseconds))
   }
 
 }
