@@ -20,15 +20,15 @@
 
 package com.signalcollect.javaapi
 
-import com.signalcollect.interfaces.AggregationOperation
 import com.signalcollect.Vertex
 import java.util.Map
 import java.util.HashMap
+import com.signalcollect.ModularAggregationOperation
 
 /**
  * Aggregates all the ids and states and returns them as a java compatible map.
  */
-class JavaIdStateAggregator[IdType, StateType] extends AggregationOperation[Map[IdType, StateType]] {
+class JavaIdStateAggregator[IdType, StateType] extends ModularAggregationOperation[Map[IdType, StateType]] {
   val neutralElement = new HashMap[IdType, StateType]()
   def extract(v: Vertex[_, _]): Map[IdType, StateType] = {
     try {

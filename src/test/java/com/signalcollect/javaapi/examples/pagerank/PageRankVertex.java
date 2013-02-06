@@ -34,10 +34,10 @@ public class PageRankVertex extends DataGraphVertex<Integer, Double, Double> {
 	 * @param mostRecentSignals all signals from pages that link to this page.
 	 * @return the new PageRank of this page.
 	 */
-	public Double collect(Double oldState, Iterable<Double> mostRecentSignals) {
+	public Double collect() {
 		Double rankSum = 0.0;
-		for (Object signal : mostRecentSignals) {
-			rankSum += (Double) signal;
+		for (Double signal : signals()) {
+			rankSum += signal;
 		}
 		return baseRank + dampingFactor * rankSum;
 	}

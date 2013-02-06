@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.signalcollect.ExecutionInformation;
-import com.signalcollect.interfaces.AggregationOperation;
+import com.signalcollect.ModularAggregationOperation;
 import com.signalcollect.StateForwarderEdge;
 import com.signalcollect.Vertex;
 import com.signalcollect.javaapi.*;
@@ -87,7 +87,7 @@ public class BetweennessCentrality {
 		System.out.println(stats);
 
 		// get global shortest paths. All shortest paths between all vertices
-		final HashMap<Set<Integer>, PathValue> globalShortestPaths = graph
+		final HashMap<Set<Integer>, PathValue> globalShortestPaths = (HashMap<Set<Integer>, PathValue>) graph
 				.aggregate(new GetGlobalShortestPaths());
 
 		// debug output that is nice to see.
@@ -148,8 +148,8 @@ public class BetweennessCentrality {
 
 	// Inner class to aggregate global shortest paths in the graph
 	@SuppressWarnings("serial")
-	private class GetGlobalShortestPaths implements
-			AggregationOperation<HashMap<Set<Integer>, PathValue>> {
+	private class GetGlobalShortestPaths extends
+			ModularAggregationOperation<HashMap<Set<Integer>, PathValue>> {
 
 		@Override
 		public HashMap<Set<Integer>, PathValue> aggregate(
@@ -163,7 +163,7 @@ public class BetweennessCentrality {
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public HashMap<Set<Integer>, PathValue> extract(Vertex<?, ?> v) {
+		public HashMap<Set<Integer>, PathValue> extract(Vertex v) {
 			return ((HashMap<Set<Integer>, PathValue>) ((HashMap<?, ?>) v
 					.state()).clone());
 		}

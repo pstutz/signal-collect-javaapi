@@ -21,8 +21,6 @@ package com.signalcollect.javaapi;
 
 import scala.Option;
 import com.signalcollect.GraphEditor;
-import com.signalcollect.AbstractVertex;
-import java.util.LinkedList;
 
 /**
  * Vertex implementation that collects all the signals that have arrived since
@@ -30,8 +28,7 @@ import java.util.LinkedList;
  * class to implement a specific algorithm by defining a `collect` function.
  */
 @SuppressWarnings("serial")
-public abstract class DataFlowVertex<Id, State, Signal> extends
-		AbstractVertex<Object, State> {
+public abstract class DataFlowVertex<Id, State, Signal> extends AbstractVertex {
 
 	Id id;
 	State state;
@@ -60,23 +57,15 @@ public abstract class DataFlowVertex<Id, State, Signal> extends
 		state = (State) s;
 	}
 
-	public abstract State resetState();
-
 	/**
 	 * Delegates to superclass and resets the state to the initial state after
 	 * signaling.
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	@Override
 	public void executeSignalOperation(GraphEditor graphEditor) {
 		super.executeSignalOperation(graphEditor);
-		setState(resetState());
 	}
-
-	/**
-	 * List of signals that have not been collected yet.
-	 */
-	LinkedList<Signal> uncollectedSignals = new LinkedList<Signal>();
 
 	/**
 	 * Function that gets called by the framework whenever this vertex is
@@ -93,8 +82,6 @@ public abstract class DataFlowVertex<Id, State, Signal> extends
 	@SuppressWarnings({ "rawtypes" })
 	@Override
 	public void executeCollectOperation(GraphEditor graphEditor) {
-		setState(collect(state(), uncollectedSignals));
-		uncollectedSignals = new LinkedList<Signal>();
 	}
 
 	/**
@@ -107,8 +94,8 @@ public abstract class DataFlowVertex<Id, State, Signal> extends
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public boolean deliverSignal(Object signal, Option sourceId) {
-		uncollectedSignals.add((Signal) signal);
-		return false;
+		setState(collect((Signal) signal));
+		return true;
 	}
 
 	/**
@@ -125,8 +112,7 @@ public abstract class DataFlowVertex<Id, State, Signal> extends
 	 * 
 	 * @return The new vertex state.
 	 */
-	public abstract State collect(State oldState,
-			Iterable<Signal> uncollectedSignals);
+	public abstract State collect(Signal signal);
 
 	/**
 	 * This method is used by the framework in order to decide if the vertex'
@@ -136,13 +122,7 @@ public abstract class DataFlowVertex<Id, State, Signal> extends
 	 *         thresholds set in the framework.
 	 */
 	public double scoreCollect() {
-		if (!uncollectedSignals.isEmpty()) {
-			return 1.0;
-		} else if (edgesModifiedSinceCollectOperation()) {
-			return 1.0;
-		} else {
-			return 0.0;
-		}
+		return 0.0;
 	}
 
 }

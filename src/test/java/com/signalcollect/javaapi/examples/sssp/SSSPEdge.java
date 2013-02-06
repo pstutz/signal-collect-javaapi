@@ -1,7 +1,5 @@
 package com.signalcollect.javaapi.examples.sssp;
 
-import com.signalcollect.Vertex;
-
 import com.signalcollect.DefaultEdge;
 
 /**
@@ -25,8 +23,8 @@ public class SSSPEdge extends DefaultEdge<Object> {
 	 * path over the source vertex.
 	 */
 	@Override
-	public Object signal(Vertex<?, ?> sourceVertex) {
-		Integer distanceToSource = (Integer) sourceVertex.state();
+	public Object signal() {
+		Integer distanceToSource = (Integer) source().state();
 		if (distanceToSource != Integer.MAX_VALUE) {
 			return distanceToSource + (int) this.weight();
 		} else {

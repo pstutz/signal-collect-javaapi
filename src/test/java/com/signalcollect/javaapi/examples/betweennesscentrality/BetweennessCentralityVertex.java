@@ -56,24 +56,22 @@ public class BetweennessCentralityVertex
 	 * determine if this information is relevant to their context.
 	 */
 	@SuppressWarnings("unchecked")
-	public HashMap<Set<Integer>, PathValue> collect(
-			HashMap<Set<Integer>, PathValue> oldState,
-			Iterable<HashMap<Set<Integer>, PathValue>> mostRecentSignals) {
-		HashMap<Set<Integer>, PathValue> newState = (HashMap<Set<Integer>, PathValue>) ((HashMap<?, ?>) oldState)
+	public HashMap<Set<Integer>, PathValue> collect() {
+		HashMap<Set<Integer>, PathValue> newState = (HashMap<Set<Integer>, PathValue>) ((HashMap<?, ?>) state)
 				.clone();
 
 		// Find neighbors
 		Set<Integer> neighbors = new HashSet<Integer>();
-		java.util.Set<Object> targetIds = outgoingEdges().keySet();
+		java.util.Set<Object> targetIds = outgoingEdges.keySet();
 		for (Object targetId : targetIds) {
 			neighbors.add((Integer) targetId);
 		}
 
-		for (HashMap<Set<Integer>, PathValue> signal : mostRecentSignals) {
+		for (HashMap<Set<Integer>, PathValue> signal : signals()) {
 			for (Set<Integer> key : signal.keySet()) {
 				// only add a new entry if the key from the signal is not key
 				// present
-				if (oldState.get(key) == null) {
+				if (state.get(key) == null) {
 					// The value associated with the key (path plus distance)
 					PathValue value = signal.get(key);
 					// Add the key, value pair if the vertex is on the path
@@ -103,11 +101,11 @@ public class BetweennessCentralityVertex
 							// are still just their own vertex id
 							if (start_loop != 2) {
 								Set<Integer> new_key = new HashSet<Integer>();
-								new_key.add(this.id());
+								new_key.add(id);
 								new_key.add(n);
 								PathValue new_value = new PathValue();
 								Set<Integer> path = new HashSet<Integer>();
-								path.add(this.id());
+								path.add(id);
 								path.add(n);
 								new_value.setKey(new_key);
 								new_value.setPath(path);
@@ -119,11 +117,11 @@ public class BetweennessCentralityVertex
 								newState.put(key, signal.get(key));
 							} else { // Adds the path to the unknown vertex
 								Set<Integer> new_key = new HashSet<Integer>();
-								new_key.add(this.id());
+								new_key.add(id);
 								new_key.add(new_vertex);
 								PathValue new_value = new PathValue();
 								Set<Integer> path = new HashSet<Integer>();
-								path.add(this.id());
+								path.add(id);
 								for (Integer i : value.getPath()) {
 									path.add(i);
 								}
@@ -134,10 +132,10 @@ public class BetweennessCentralityVertex
 							}
 						}
 					}
-				} else if (oldState.get(key).getDistance() >= signal.get(key)
+				} else if (state.get(key).getDistance() >= signal.get(key)
 						.getDistance()) { // Update the path if a shorter one is
 											// found
-					if (oldState.get(key).getPath().size() > signal.get(key)
+					if (state.get(key).getPath().size() > signal.get(key)
 							.getPath().size()) {
 						newState.put(key, signal.get(key));
 					}

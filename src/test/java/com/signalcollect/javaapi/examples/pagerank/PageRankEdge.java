@@ -21,7 +21,8 @@ public class PageRankEdge extends DefaultEdge<Object> {
 	 * Constructs the signal as the weighted vertex's state divided by the total weight of outgoing edges.
 	 * When no weight is specified the signal is simply the vertex's state divided by the number of outgoing edges.
 	 */
-	public Object signal(Vertex<?, ?> sourceVertex) {
-		return ((Double) sourceVertex.state()) * weight() / ((PageRankVertex) sourceVertex).sumOfOutWeights;
+	public Object signal() {
+		return ((Double) source().state()) * weight() / ((PageRankVertex) source()).sumOfOutWeights;
 	}
+
 }
