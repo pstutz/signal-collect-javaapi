@@ -20,24 +20,18 @@
 package com.signalcollect.javaapi
 
 import com.signalcollect._
+import java.util.HashMap
 
 /**
- * Traits with specialization such as Vertex can not be implemented
+ * Traits with specialization such as Vertex cannot be implemented
  * from Java. This class acts as a bridge to support it.
  */
-class VertexSpecializationBridge extends Vertex[Object, Object] {
-  def id: Object = null.asInstanceOf[Object]
-  def state: Object = null.asInstanceOf[Object]
-  def setState(s: Object) = {}
-  def addEdge(e: Edge[_], graphEditor: GraphEditor[Any, Any]): Boolean = null.asInstanceOf[Boolean]
-  def removeEdge(targetId: Any, graphEditor: GraphEditor[Any, Any]): Boolean = null.asInstanceOf[Boolean]
-  def removeAllEdges(graphEditor: GraphEditor[Any, Any]): Int = null.asInstanceOf[Int]
-  def deliverSignal(signal: Any, sourceId: Option[Any]): Boolean = null.asInstanceOf[Boolean]
-  def executeSignalOperation(graphEditor: GraphEditor[Any, Any]) = {}
-  def executeCollectOperation(graphEditor: GraphEditor[Any, Any]) = {}
-  def scoreSignal: Double = null.asInstanceOf[Double]
-  def scoreCollect: Double = null.asInstanceOf[Double]
-  def edgeCount: Int = null.asInstanceOf[Int]
-  def afterInitialization(graphEditor: GraphEditor[Any, Any]) = {}
-  def beforeRemoval(graphEditor: GraphEditor[Any, Any]) = {}
+abstract class VertexSpecializationBridge[Id, State] extends Vertex[Id, State] {
+  val id: Id
+  var state: State
+  def setState(s: State) = {
+    state = s
+  }
+  var outgoingEdges: HashMap[Object, Edge[Object]]
+  def edgeCount: Int = outgoingEdges.size
 }
